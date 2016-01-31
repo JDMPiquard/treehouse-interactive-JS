@@ -29,14 +29,17 @@ var editTask = function() {
 
     var editInput = listItem.querySelector("input[type=text]");
     var label = listItem.querySelector("label");
+    var editButton = listItem.querySelector("button.edit");
 
       // if parent (of the button) has a class "editMode"
     if (listItem.classList.contains("editMode")) {
       // label text is set from input's value
       label.innerText = editInput.value;
+      editButton.innerText = "Edit";
     } else {
       // input value is set from label's text
       editInput.value = label.innerText;
+      editButton.innerText = "Save";
     }
     
     // toggle "editMode" class
