@@ -14,7 +14,9 @@ var addTask = function() {
   // when a button is pressed
   // when the enter key is pressed
     // call the create task funciton
+    var listItem = createNewTask(taskInput.value); // caution this is placeholder text
     // append to #incomplete-tasks 
+    incompleteTasksHolder.appendChild(listItem);
 }
 
 // Edit task
@@ -33,33 +35,69 @@ var editTask = function() {
 // delete task
 var deleteTask = function() {
   console.log("Deleting task...")
-  // when a button is pressed
-    // remove parent list item
+  // identify parent items
+  var listItem = this.parentNode;
+  var ul = listItem.parentNode;
+  // remove list item
+  ul.removeChild(listItem);
+
 }
 
 // check task as complete
 var taskComplete = function() {
   console.log("Completed")
-  // when checklist is checked
-    // append task list item to #completed-tasks
+  // append task list item to #completed-tasks
+  var listItem = this.parentNode;
+  completedTasksHolder.appendChild(listItem);
+  bindTaskEvents(listItem, taskIncomplete);
 }
 
 // uncheck task as incomplete
 var taskIncomplete = function() {
   console.log("Task now incomplete")
-  // when checklist is unchecked
-    // append task list item to #incomplete-tasks
+  // append task list item to #incomplete-tasks
+  var listItem = this.parentNode;
+  incompleteTasksHolder.appendChild(listItem);
+  bindTaskEvents(listItem, taskComplete);
 }
 
 // Create Task
-var createTask = function() {
+var createNewTask = function(content) {
   console.log("creating task...")
   // it's a list item with
+  var listItem = document.createElement("li");
     // input type = "checkbox"
+    var checkbox = document.createElement("input");
     // label with name of the task
+    var label = document.createElement("label");
     // input type="text"
+    var editInput = document.createElement("input");
     // button class="edit" and value Edit
+    var editButton = document.createElement("button");
     // button class= "delete" and value Delete
+    var deleteButton = document.createElement("button");
+
+  // each element needs modifying
+  checkbox.type = "checkbox";
+  editInput.type = "text";
+
+  editButton.innerText = "Edit";
+  editButton.className = "edit";
+  deleteButton.innerText = "Delete";
+  deleteButton.className = "delete";
+  label.innerText = content;
+
+  // each element needs appending
+  listItem.appendChild(checkbox);
+  listItem.appendChild(label);
+  listItem.appendChild(editInput);
+  listItem.appendChild(editButton);
+  listItem.appendChild(deleteButton);
+
+  // bind relevant events to the buttons
+  bindTaskEvents(listItem, taskComplete);
+
+  return listItem;
 }
 
 // Toggle Edit Mode
@@ -69,9 +107,15 @@ var toggleEditMode = function() {
 
 var bindTaskEvents = function(taskListItem, checkBoxEventHandler) {
   console.log("binding...")
+  var checkbox = taskListItem.querySelector("input[type=checkbox]");
+  var editButton = taskListItem.querySelector("button.edit");
+  var deleteButton = taskListItem.querySelector("button.delete");
   // bind editTask to edit button
-    // bind deleteTask to delete button
-    // bind taskCompleted to checkbox
+  editButton.onclick = editTask;
+  // bind deleteTask to delete button
+  deleteButton.onclick = deleteTask;
+  // bind taskCompleted to checkbox
+  checkbox.onchange = checkBoxEventHandler;
 }
 
 var cycleUl = function(ulReference, checkBoxEventHandler) {
@@ -80,9 +124,10 @@ var cycleUl = function(ulReference, checkBoxEventHandler) {
   for (var i = 0; i < ulChildren.length; i++) {
     console.log("cycling!");
     bindTaskEvents(ulChildren[i], checkBoxEventHandler);
-
   }
 }
+
+// Setting up the events
 
 // set the click handlet to the add task function
 addButton.onclick = addTask;
@@ -90,9 +135,9 @@ addButton.onclick = addTask;
 
 //bind events to buttons and checkboxes
 // binding for incomplete events
-cycleUl(incompleteTasksHolder, taskComplete)
+cycleUl(incompleteTasksHolder, taskComplete);
 // binding for complete events
-cycleUl(completedTasksHolder, taskIncomplete)
+cycleUl(completedTasksHolder, taskIncomplete);
   // cycle over <li> within <ul> to 
 
     // for each list item
