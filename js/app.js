@@ -11,7 +11,6 @@ var completedTasksHolder = document.getElementById('completed-tasks'); // #compl
 // Add a new task (see create task)
 var addTask = function() {
   console.log("Adding task...")
-  // when a button is pressed
   // when the enter key is pressed
     // call the create task funciton
     var listItem = createNewTask(taskInput.value); // caution this is placeholder text
@@ -22,14 +21,23 @@ var addTask = function() {
 // Edit task
 var editTask = function() {
   console.log("Editing task...")
-  // when a button is pressed
-    //Toggle Edit Mode
+
+    var listItem = this.parentNode;
+
+    var editInput = listItem.querySelector("input[type=text]");
+    var label = listItem.querySelector("label");
+
       // if parent (of the button) has a class "editMode"
-        // switch to no class
-        // label text become input's value
-      // if parent has not class
-        // toggle "editMode" class
-        // input value becomes label's text
+    if (listItem.classList.contains("editMode")) {
+      // label text is set from input's value
+      label.innerText = editInput.value;
+    } else {
+      // input value is set from label's text
+      editInput.value = label.innerText;
+    }
+    
+    // toggle "editMode" class
+    listItem.classList.toggle("editMode")
 }
 
 // delete task
