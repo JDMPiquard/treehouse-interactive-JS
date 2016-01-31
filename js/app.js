@@ -13,9 +13,12 @@ var addTask = function() {
   console.log("Adding task...")
   // when the enter key is pressed
     // call the create task funciton
-    var listItem = createNewTask(taskInput.value); // caution this is placeholder text
-    // append to #incomplete-tasks 
-    incompleteTasksHolder.appendChild(listItem);
+    if (taskInput.value){
+        var listItem = createNewTask(taskInput.value); // caution this is placeholder text
+        // append to #incomplete-tasks 
+        incompleteTasksHolder.appendChild(listItem);
+        taskInput.value = "";
+    }
 }
 
 // Edit task
@@ -108,11 +111,6 @@ var createNewTask = function(content) {
   return listItem;
 }
 
-// Toggle Edit Mode
-var toggleEditMode = function() {
-  // append class = "editMode" to <li>}
-}
-
 var bindTaskEvents = function(taskListItem, checkBoxEventHandler) {
   console.log("binding...")
   var checkbox = taskListItem.querySelector("input[type=checkbox]");
@@ -138,8 +136,15 @@ var cycleUl = function(ulReference, checkBoxEventHandler) {
 // Setting up the events
 
 // set the click handlet to the add task function
-addButton.onclick = addTask;
-// taskInput.keydown = addTask;   // not working...
+addButton.addEventListener("click", addTask);
+addButton.addEventListener("click", function(){console.log("other requests")});
+taskInput.addEventListener("keydown", function(e) {
+  if(e.which == 13){
+    addTask();
+  } else {
+    console.log("you shall not pass! Try pressing enter");
+  }
+});   // works!
 
 //bind events to buttons and checkboxes
 // binding for incomplete events
